@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
 import Movie from './Movie';
 
@@ -17,44 +17,31 @@ class App extends Component {
   }
   
   componentDidMount(){
-    setTimeout(() => {
-      this.setState({
-        movies : [
-          {
-            title : "Interstella",
-            poster : "https://decipherscifi.com/wp-content/uploads/sites/4/2016/05/Interstellar-2-1024x576.jpg"
-          },
-          {
-            
-            title : "Interstella",
-            poster : "https://decipherscifi.com/wp-content/uploads/sites/4/2016/05/Interstellar-2-1024x576.jpg"
-          },
-          {
-            
-            title : "Interstella",
-            poster : "https://decipherscifi.com/wp-content/uploads/sites/4/2016/05/Interstellar-2-1024x576.jpg"
-          },
-          {
-            
-            title : "Interstella",
-            poster : "https://decipherscifi.com/wp-content/uploads/sites/4/2016/05/Interstellar-2-1024x576.jpg"
-          },
-          {
-            title : "Inception",
-            poster : "https://upload.wikimedia.org/wikipedia/en/thumb/1/18/Inception_OST.jpg/220px-Inception_OST.jpg"
-          }
-        
-        ]
-      })
-    },5000)
+    this._getMovies();
   }
 
 
   _renderMovie = () => {
-    const movies = this.state.movies.map((movie, index) =>{
-      return <Movie title={movie.title} poster={movie.poster} key={index}/>
+    const movies = this.state.movies.map((movie) =>{
+      console.log(movie)
+      return <Movie title={movie.title} poster={movie.large_cover_image} key={movie.id}/>
     })
     return movies;
+  }
+
+  _getMovies = async () => {
+      const movies = await this._callApi();
+      this.setState({ // _callApi()가 완료되고 실행됨(성공하든 실패하든)
+        movies  // movies : movies
+      })
+      
+  }
+
+  _callApi = () => {
+    return fetch('https://yts.am/api/v2/list_movies.json?sort_by=rating')
+    .then(response => response.json())
+    .then(json => json.data.movies)
+    .catch(err => console.log(err))
   }
   
   render() {
